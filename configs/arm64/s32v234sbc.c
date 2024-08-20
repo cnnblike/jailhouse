@@ -16,7 +16,7 @@
  * This work is licensed under the terms of the GNU GPL, version 2.  See
  * the COPYING file in the top-level directory.
  *
- * NOTE: Add "mem=1024M" to the kernel command line.
+ * NOTE: Add "mem=256M" to the kernel command line.
  */
 
 #include <jailhouse/types.h>
@@ -52,6 +52,7 @@ struct {
 	.header = {
 		.signature = JAILHOUSE_SYSTEM_SIGNATURE,
 		.revision = JAILHOUSE_CONFIG_REVISION,
+		.architecture = JAILHOUSE_ARM64,
 		.flags = JAILHOUSE_SYS_VIRTUAL_DEBUG_CONSOLE,
 		.hypervisor_memory = {
 			.phys_start = 0xfc000000,
