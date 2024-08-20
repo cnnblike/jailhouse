@@ -33,6 +33,7 @@ int smccc_discover(void)
 	/* FIXME: add proper support for SMC and PSCI into u-boot and
 	 * allow this code to run properly.
 	 */
+	sdei_available = false;
 	return 0;
 #endif
 
