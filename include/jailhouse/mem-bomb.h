@@ -20,24 +20,30 @@
 #define xstr(s) str(s)
 #define str(s) #s
 
-/*NOTE: Choose on which architecture you are running membomb to use the correct memory addresses*/
-//#define CONFIG_ZCU102
-//#define CONFIG_MACH_NXP_S32
+/* FIXME: the starting addresses for the bombs are currently selected
+ * via CONFIG-based definitions. The CONFIG is specified in
+ * `include/jailhouse/config.h`. Update this to autogenerate the
+ * config file and the per-board addresses.
+ *
+ * FIXME: The same CONFIG also controls settings for SDEI, SMCC, QoS.
+ */
+/* CONFIG options for different boards */
+// #define CONFIG_MACH_ZYNQMP_ZCU102
+// #define CONFIG_MACH_ZYNQMP_ZCU104
+// #define CONFIG_MACH_ZYNQMP_ZCU106
+// #define CONFIG_MACH_NXP_S32v2
 // #define CONFIG_MACH_NXP_S32g2
 // #define CONFIG_MACH_NXP_IMX8MQ
-// #define CONFIG_ZCU104
-// #define CONFIG_ZCU106
-#define CONFIG_RK3588_ROCK5B
+// #define CONFIG_MACH_RK3588
 
-/* NOTE: This controls the settings in the template memory bombs inmates */
-#ifdef CONFIG_RK3588_ROCK5B
+#ifdef CONFIG_MACH_RK3588
 #define NUM_CPU			8
 #else
 #define NUM_CPU			4
 #endif
 #define BOMB_CPU		1 << (BOMB_ID + 1)
 /**
- * NOTE: Hacky but effective way of configure different parameters
+ * XXX: Hacky but effective way of configure different parameters
  * for different DRAM layouts on ZCU104, ZCU102 and S32V.
  *
  * The PHYS values controls the placement in physical memory, the VIRT
@@ -48,13 +54,13 @@
  * Changing the values here affects: the config templates (phys values,
  * and phys 2 virt configuration), the inmates mem-bomb (mapping).
  */
-#ifdef CONFIG_MACH_NXP_S32
+#ifdef CONFIG_MACH_NXP_S32v2
 /* S32: start at high 256 of DDR0 and let the other go in the DDR1 */
-//#define MAIN_PHYS_BASE		0xb0000000
+#define MAIN_PHYS_BASE		0xb0000000
 #define COMM_PHYS_BASE		0xa0000000
 /* S32: same DDR0 MC, different banks, reduce linux to only 256 MB */
 //#define MAIN_PHYS_BASE		0x90000000
-#define MAIN_PHYS_BASE		0xc0000000
+//#define MAIN_PHYS_BASE		0xc0000000
 //#define COMM_PHYS_BASE		0xc0000000 // move comm in the high DDR
 #endif
 #ifdef CONFIG_MACH_NXP_S32g2
@@ -65,17 +71,17 @@
 #define MAIN_PHYS_BASE		0xC0010000
 #define COMM_PHYS_BASE		0xF0000000
 #endif
-#if defined(CONFIG_ZCU104) || defined(CONFIG_ZCU106)
+#if defined(CONFIG_MACH_ZYNQMP_ZCU104) || defined(CONFIG_MACH_ZYNQMP_ZCU106)
 #define COMM_PHYS_BASE		0x50020000
 #define MAIN_PHYS_BASE		0x57c00000
 #endif
-#ifdef CONFIG_ZCU102
+#ifdef CONFIG_MACH_ZYNQMP_ZCU102
 /* ZCU102 */
 #define MAIN_PHYS_BASE		0x800200000	// high dram
 //#define MAIN_PHYS_BASE		0x020000000	// low dram
 #define COMM_PHYS_BASE		0x87c000000
 #endif
-#ifdef CONFIG_RK3588_ROCK5B
+#ifdef CONFIG_MACH_RK3588
 #define MAIN_PHYS_BASE		0x20700000
 #define COMM_PHYS_BASE		0x2c800000
 #endif

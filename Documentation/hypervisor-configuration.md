@@ -55,4 +55,6 @@ NOTE: some options might also require modification at EL3/Firmware level.
     #define CONFIG_MACH_ZYNQMP_ZCU102      1
 
     /* Enable QoS Support for S32V/G */
-    #define CONFIG_MACH_NXP_S32 1
+    #define CONFIG_MACH_NXP_S32v2 1
+
+See also: `include/jailhouse/mem-bomb.h`
