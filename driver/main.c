@@ -771,7 +771,7 @@ static int memguard_call_one_cpu(void *par)
 	return jailhouse_call_arg1(JAILHOUSE_HC_MEMGUARD_SET, __pa(params));
 }
 
-int jailhouse_cmd_memguard(struct jailhouse_memguard __user *arg)
+static int jailhouse_cmd_memguard(struct jailhouse_memguard __user *arg)
 {
 	struct jailhouse_memguard *mg;
 	int err;
@@ -825,7 +825,7 @@ out_free:
 	return err;
 }
 
-int jailhouse_cmd_qos(struct jailhouse_qos_args __user *arg)
+static int jailhouse_cmd_qos(struct jailhouse_qos_args __user *arg)
 {
 	struct jailhouse_qos_args qos_args;
 	struct qos_setting *settings;
