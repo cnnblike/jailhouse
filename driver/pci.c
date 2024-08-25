@@ -303,6 +303,7 @@ static const struct of_device_id gic_of_match[] = {
 static bool create_vpci_of_overlay(struct jailhouse_system *config)
 {
 	u32 address_cells, size_cells, gic_address_cells, gic_phandle;
+	u32 gic_interrupt_cells;
 	struct device_node *vpci_node = NULL;
 	struct device_node *root, *gic;
 	struct property *prop = NULL;
@@ -329,6 +330,11 @@ static bool create_vpci_of_overlay(struct jailhouse_system *config)
 	if (of_property_read_u32(gic, "#address-cells", &gic_address_cells) < 0)
 		gic_address_cells = 0;
 	gic_phandle = gic->phandle;
+
+	if (of_property_read_u32(gic, "#interrupt-cells", &gic_interrupt_cells) < 0)
+		gic_interrupt_cells = 3;
+	if (gic_interrupt_cells < 3)
+		gic_interrupt_cells = 3;
 
 	of_node_put(gic);
 
@@ -392,7 +398,7 @@ static bool create_vpci_of_overlay(struct jailhouse_system *config)
 	}
 
 	prop = alloc_prop("interrupt-map",
-			  sizeof(u32) * (8 + gic_address_cells) * 4);
+			  sizeof(u32) * (5 + gic_address_cells + gic_interrupt_cells) * 4);
 	if (!prop)
 		goto out;
 
@@ -406,6 +412,7 @@ static bool create_vpci_of_overlay(struct jailhouse_system *config)
 		prop_val[cell++] =
 			cpu_to_be32(config->root_cell.vpci_irq_base + n);
 		prop_val[cell++] = cpu_to_be32(IRQ_TYPE_EDGE_RISING);
+		cell += gic_interrupt_cells - 3;
 	}
 
 	if (of_changeset_add_property(&overlay_changeset, vpci_node, prop) < 0)
