@@ -14,10 +14,12 @@
  *
  * Linux guest cell on cores 2 and 3, 62 MB RAM.
  *
- * We'll use UART8 as output, so have to enable it in the root cell's DTB:
+ * We'll use UART8 as output, so you have to enable it in the root cell's DTB:
  *   &uart8 {
  *     status = "okay";
  *   };
+ *
+ * Change here and the root cell DTB accordingly to activate the other serials.
  */
 
 #include <jailhouse/types.h>
