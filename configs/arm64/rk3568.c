@@ -78,7 +78,7 @@ struct {
 				.num_pmu_irq = 4,
 				/* One PMU irq per CPU */
 				.pmu_cpu_irq = {
-					23, 23, 23, 23,
+					260, 261, 262, 263,
 				},
 			},
 		},
