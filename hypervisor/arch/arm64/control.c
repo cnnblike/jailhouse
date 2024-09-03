@@ -22,10 +22,7 @@
 void arm_cpu_reset(unsigned long pc, bool aarch32)
 {
 	u64 hcr_el2;
-
-#ifndef CONFIG_MACH_RK3588
-	u64 fpexc32_el2;
-#endif
+	u64 id_aa64pfr0;
 
 	/* put the cpu in a reset state */
 	/* AARCH64_TODO: handle big endian support */
@@ -62,11 +59,18 @@ void arm_cpu_reset(unsigned long pc, bool aarch32)
 	arm_write_sysreg(TTBR1_EL1, 0);
 	arm_write_sysreg(VBAR_EL1, 0);
 
-#ifndef CONFIG_MACH_RK3588
-	arm_read_sysreg(FPEXC32_EL2, fpexc32_el2);
-	fpexc32_el2 |= FPEXC_EL2_EN_BIT;
-	arm_write_sysreg(FPEXC32_EL2, fpexc32_el2);
-#endif
+	arm_read_sysreg(ID_AA64PFR0_EL1, id_aa64pfr0);
+	if ((id_aa64pfr0 & ID_AA64PFR0_EL1_MASK) == ID_AA64PFR0_EL1_AARCH32) {
+		/* EL1 supports AArch32 mode, clear AArch32 support registers */
+		u64 fpexc32_el2;
+
+		arm_read_sysreg(FPEXC32_EL2, fpexc32_el2);
+		fpexc32_el2 |= FPEXC_EL2_EN_BIT;
+		arm_write_sysreg(FPEXC32_EL2, fpexc32_el2);
+
+		arm_write_sysreg(IFSR32_EL2, 0);
+		arm_write_sysreg(DACR32_EL2, 0);
+	}
 
 	/* wipe timer registers */
 	arm_write_sysreg(CNTP_CTL_EL0, 0);
@@ -78,7 +82,6 @@ void arm_cpu_reset(unsigned long pc, bool aarch32)
 
 	/* AARCH64_TODO: handle PMU registers */
 	/* AARCH64_TODO: handle debug registers */
-	/* AARCH64_TODO: handle system registers for AArch32 state */
 	arm_read_sysreg(HCR_EL2, hcr_el2);
 	if (aarch32) {
 		arm_write_sysreg(SPSR_EL2, RESET_PSR_AARCH32);

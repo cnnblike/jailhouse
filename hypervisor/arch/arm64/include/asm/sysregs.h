@@ -165,6 +165,9 @@
 
 #define CPACR_EL1_FPEN_ALL	(3UL << 20)
 
+#define ID_AA64PFR0_EL1_MASK	0xf0
+#define ID_AA64PFR0_EL1_AARCH32	0x20
+
 #define FPEXC_EL2_EN_BIT	(1UL << 30)
 
 #ifndef __ASSEMBLY__
