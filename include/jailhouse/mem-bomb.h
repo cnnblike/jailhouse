@@ -86,6 +86,12 @@
 #define COMM_PHYS_BASE		0x2c800000
 #endif
 
+// TODO, KL: not aware of what mem bomb is but it looks like it's a way to generate worst scenario for mem access as described in mem-bomb.c.
+#ifdef CONFIG_MACH_RK3308
+#define MAIN_PHYS_BASE		0x10700000
+#define COMM_PHYS_BASE		0x1c800000
+#endif
+
 /* Main program */
 #define MAIN_SIZE		0x200000
 /* Memory Area for the experiments */
